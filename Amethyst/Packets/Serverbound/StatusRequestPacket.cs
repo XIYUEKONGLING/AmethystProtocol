@@ -1,14 +1,19 @@
+using Amethyst.Core;
 using Amethyst.Interfaces;
 
 namespace Amethyst.Packets.Serverbound;
 
-public class StatusRequestPacket : IIncomingPacket<StatusRequestPacket>
+public class StatusRequestPacket : IPacket
 {
-    public static int Id => 0x00;
+    public int Id => 0x00;
+
+    public void Write(Stream stream)
+    {
+        // Empty body
+    }
 
     public static StatusRequestPacket Read(Stream stream)
     {
-        // No fields to read
         return new StatusRequestPacket();
     }
 }
