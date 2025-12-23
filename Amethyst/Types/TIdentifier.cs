@@ -63,10 +63,10 @@ public readonly partial struct TIdentifier : IType<TIdentifier>
         }
     }
 
-    [GeneratedRegex("^[a-z0-9.-_]+$")]
+    [GeneratedRegex("^[a-z0-9._-]+$")]
     private static partial Regex NamespaceRegex();
 
-    [GeneratedRegex("^[a-z0-9.-_/]+$")]
+    [GeneratedRegex("^[a-z0-9._/-]+$")]
     private static partial Regex ValueRegex();
 
     public static implicit operator string(TIdentifier i) => i.ToString();
