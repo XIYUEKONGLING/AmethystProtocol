@@ -37,7 +37,7 @@ public class StatusCommand : AsyncCommand<ServerSettings>
         catch (Exception ex)
         {
             // Fix: Escape the exception message to prevent markup parsing errors
-            AnsiConsole.MarkupLine($"[red]Error:[/ {Markup.Escape(ex.Message)}");
+            AnsiConsole.MarkupLine($"[red]Error:[/] {Markup.Escape(ex.Message)}");
             return 1;
         }
     }
