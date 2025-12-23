@@ -8,6 +8,7 @@ public enum ProtocolState
 {
     Status = 1,
     Login = 2,
+    Transfer = 3,
 }
 
 public class HandshakePacket(int protocolVersion, string serverAddress, ushort serverPort, ProtocolState nextState) : IPacket
