@@ -1,4 +1,4 @@
-namespace Amethyst.Models;
+namespace Amethyst.Structs;
 
 public class Packet
 {

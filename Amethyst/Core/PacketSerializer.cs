@@ -1,5 +1,5 @@
 using System.IO.Compression;
-using Amethyst.Models;
+using Amethyst.Structs;
 using Amethyst.Types;
 
 namespace Amethyst.Core;
