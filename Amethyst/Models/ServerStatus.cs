@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Amethyst.Models;
@@ -11,7 +12,7 @@ public class ServerStatus
     public required PlayersPayload Players { get; init; }
 
     [JsonPropertyName("description")]
-    public required DescriptionPayload Description { get; init; }
+    public required JsonElement Description { get; init; }
 
     [JsonPropertyName("favicon")]
     public string? Favicon { get; init; } // "data:image/png;base64,<data>"
