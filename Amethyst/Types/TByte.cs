@@ -2,7 +2,7 @@ using Amethyst.Interfaces;
 
 namespace Amethyst.Types;
 
-public readonly struct Byte(sbyte value) : IType<Byte>
+public readonly struct TByte(sbyte value) : IType<TByte>
 {
     public sbyte Value { get; } = value;
 
@@ -11,7 +11,7 @@ public readonly struct Byte(sbyte value) : IType<Byte>
         stream.WriteByte((byte)Value);
     }
 
-    public static Byte Read(Stream stream)
+    public static TByte Read(Stream stream)
     {
         var b = stream.ReadByte();
         if (b == -1)
@@ -19,9 +19,9 @@ public readonly struct Byte(sbyte value) : IType<Byte>
             throw new EndOfStreamException("End of stream reached while reading Byte.");
         }
 
-        return new Byte((sbyte)b);
+        return new TByte((sbyte)b);
     }
 
-    public static implicit operator sbyte(Byte b) => b.Value;
-    public static implicit operator Byte(sbyte b) => new(b);
+    public static implicit operator sbyte(TByte b) => b.Value;
+    public static implicit operator TByte(sbyte b) => new(b);
 }

@@ -2,7 +2,7 @@ using Amethyst.Interfaces;
 
 namespace Amethyst.Types;
 
-public readonly struct UnsignedByte(byte value) : IType<UnsignedByte>
+public readonly struct TUnsignedByte(byte value) : IType<TUnsignedByte>
 {
     public byte Value { get; } = value;
 
@@ -11,7 +11,7 @@ public readonly struct UnsignedByte(byte value) : IType<UnsignedByte>
         stream.WriteByte(Value);
     }
 
-    public static UnsignedByte Read(Stream stream)
+    public static TUnsignedByte Read(Stream stream)
     {
         var b = stream.ReadByte();
         if (b == -1)
@@ -19,9 +19,9 @@ public readonly struct UnsignedByte(byte value) : IType<UnsignedByte>
             throw new EndOfStreamException("End of stream reached while reading UnsignedByte.");
         }
 
-        return new UnsignedByte((byte)b);
+        return new TUnsignedByte((byte)b);
     }
 
-    public static implicit operator byte(UnsignedByte b) => b.Value;
-    public static implicit operator UnsignedByte(byte b) => new(b);
+    public static implicit operator byte(TUnsignedByte b) => b.Value;
+    public static implicit operator TUnsignedByte(byte b) => new(b);
 }
