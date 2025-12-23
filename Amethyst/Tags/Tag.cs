@@ -1,12 +1,15 @@
 using System.Text;
+using Amethyst.Tags.Arrays;
+using Amethyst.Tags.Collections;
+using Amethyst.Tags.Primitives;
 using Amethyst.Types;
 
 namespace Amethyst.Tags;
 
-public abstract class NbtTag
+public abstract class Tag
 {
     public string? Name { get; set; }
-    public abstract NbtTagType Type { get; }
+    public abstract TagType Type { get; }
 
     /// <summary>
     /// Writes the tag payload (excluding ID and Name).
@@ -30,7 +33,8 @@ public abstract class NbtTag
 
         if (writeName)
         {
-            if (Name is null) throw new InvalidOperationException("Tag name cannot be null when writing name.");
+            if (Name is null) 
+                throw new InvalidOperationException("Tag name cannot be null when writing name.");
             
             // NBT Names are standard UTF-8 strings prefixed by an unsigned short length
             var nameBytes = Encoding.UTF8.GetBytes(Name);
@@ -41,21 +45,21 @@ public abstract class NbtTag
         WritePayload(stream);
     }
 
-    public static NbtTag Create(NbtTagType type) => type switch
+    public static Tag Create(TagType type) => type switch
     {
-        NbtTagType.End => new NbtEnd(),
-        NbtTagType.Byte => new NbtByte(),
-        NbtTagType.Short => new NbtShort(),
-        NbtTagType.Int => new NbtInt(),
-        NbtTagType.Long => new NbtLong(),
-        NbtTagType.Float => new NbtFloat(),
-        NbtTagType.Double => new NbtDouble(),
-        NbtTagType.ByteArray => new NbtByteArray(),
-        NbtTagType.String => new NbtString(),
-        NbtTagType.List => new NbtList(),
-        NbtTagType.Compound => new NbtCompound(),
-        NbtTagType.IntArray => new NbtIntArray(),
-        NbtTagType.LongArray => new NbtLongArray(),
+        TagType.End => new TagEnd(),
+        TagType.Byte => new TagByte(),
+        TagType.Short => new TagShort(),
+        TagType.Int => new TagInt(),
+        TagType.Long => new TagLong(),
+        TagType.Float => new TagFloat(),
+        TagType.Double => new TagDouble(),
+        TagType.ByteArray => new TagByteArray(),
+        TagType.String => new TagString(),
+        TagType.List => new TagList(),
+        TagType.Compound => new TagCompound(),
+        TagType.IntArray => new TagIntArray(),
+        TagType.LongArray => new TagLongArray(),
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, "Unknown NBT Tag Type")
     };
 }

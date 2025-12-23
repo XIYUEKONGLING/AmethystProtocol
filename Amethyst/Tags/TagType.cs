@@ -1,6 +1,6 @@
 namespace Amethyst.Tags;
 
-public enum NbtTagType : byte
+public enum TagType : byte
 {
     End = 0,
     Byte = 1,

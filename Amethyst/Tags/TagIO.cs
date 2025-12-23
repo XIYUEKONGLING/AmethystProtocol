@@ -1,29 +1,30 @@
 using System.Text;
+using Amethyst.Tags.Collections;
 using Amethyst.Types;
 
 namespace Amethyst.Tags;
 
-public static class NbtIO
+public static class TagIO
 {
     /// <summary>
-    /// Reads a root NBT Compound from a stream.
+    /// Reads a root TagCompound from a stream.
     /// </summary>
     /// <param name="stream">The input stream.</param>
     /// <param name="isNetworkPacket">
     /// If true, adheres to 1.20.2+ Network NBT spec (Root Compound has no name).
     /// If false, adheres to Disk/Standard spec (Root Compound has name).
     /// </param>
-    public static NbtCompound Read(Stream stream, bool isNetworkPacket = false)
+    public static TagCompound Read(Stream stream, bool isNetworkPacket = false)
     {
         var typeId = stream.ReadByte();
         if (typeId == -1) throw new EndOfStreamException();
 
-        if ((NbtTagType)typeId != NbtTagType.Compound)
+        if ((TagType)typeId != TagType.Compound)
         {
             throw new InvalidDataException($"Root tag must be a TAG_Compound (ID 10), found ID {typeId}.");
         }
 
-        var root = new NbtCompound();
+        var root = new TagCompound();
 
         if (!isNetworkPacket)
         {
@@ -51,7 +52,7 @@ public static class NbtIO
     }
 
     /// <summary>
-    /// Writes a root NBT Compound to a stream.
+    /// Writes a root TagCompound to a stream.
     /// </summary>
     /// <param name="stream">The output stream.</param>
     /// <param name="tag">The compound to write.</param>
@@ -59,10 +60,10 @@ public static class NbtIO
     /// If true, adheres to 1.20.2+ Network NBT spec (Root Compound has no name).
     /// If false, adheres to Disk/Standard spec (Root Compound has name).
     /// </param>
-    public static void Write(Stream stream, NbtCompound tag, bool isNetworkPacket = false)
+    public static void Write(Stream stream, TagCompound tag, bool isNetworkPacket = false)
     {
         // Write ID
-        stream.WriteByte((byte)NbtTagType.Compound);
+        stream.WriteByte((byte)TagType.Compound);
 
         if (!isNetworkPacket)
         {

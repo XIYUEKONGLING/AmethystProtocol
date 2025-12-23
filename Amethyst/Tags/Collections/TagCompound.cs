@@ -1,13 +1,14 @@
 using System.Text;
+using Amethyst.Tags.Primitives;
 using Amethyst.Types;
 
-namespace Amethyst.Tags;
+namespace Amethyst.Tags.Collections;
 
-public class NbtCompound : NbtTag, IDictionary<string, NbtTag>
+public class TagCompound : Tag, IDictionary<string, Tag>
 {
-    private readonly Dictionary<string, NbtTag> _tags = [];
+    private readonly Dictionary<string, Tag> _tags = [];
 
-    public override NbtTagType Type => NbtTagType.Compound;
+    public override TagType Type => TagType.Compound;
 
     public override void WritePayload(Stream stream)
     {
@@ -18,7 +19,7 @@ public class NbtCompound : NbtTag, IDictionary<string, NbtTag>
         }
         
         // Close the compound with TAG_End
-        stream.WriteByte((byte)NbtTagType.End);
+        stream.WriteByte((byte)TagType.End);
     }
 
     public override void ReadPayload(Stream stream)
@@ -30,8 +31,8 @@ public class NbtCompound : NbtTag, IDictionary<string, NbtTag>
             var typeIdByte = stream.ReadByte();
             if (typeIdByte == -1) throw new EndOfStreamException();
 
-            var type = (NbtTagType)typeIdByte;
-            if (type == NbtTagType.End)
+            var type = (TagType)typeIdByte;
+            if (type == TagType.End)
             {
                 break;
             }
@@ -52,25 +53,25 @@ public class NbtCompound : NbtTag, IDictionary<string, NbtTag>
     }
 
     // Helper to get primitives easily
-    public int GetInt(string name) => _tags.TryGetValue(name, out var tag) && tag is NbtInt i ? i.Value : 0;
-    public string GetString(string name) => _tags.TryGetValue(name, out var tag) && tag is NbtString s ? s.Value : string.Empty;
-    public void Set(string name, NbtTag tag) { tag.Name = name; _tags[name] = tag; }
+    public int GetInt(string name) => _tags.TryGetValue(name, out var tag) && tag is TagInt i ? i.Value : 0;
+    public string GetString(string name) => _tags.TryGetValue(name, out var tag) && tag is TagString s ? s.Value : string.Empty;
+    public void Set(string name, Tag tag) { tag.Name = name; _tags[name] = tag; }
 
     // IDictionary Implementation
-    public void Add(string key, NbtTag value) { value.Name = key; _tags.Add(key, value); }
+    public void Add(string key, Tag value) { value.Name = key; _tags.Add(key, value); }
     public bool ContainsKey(string key) => _tags.ContainsKey(key);
     public bool Remove(string key) => _tags.Remove(key);
-    public bool TryGetValue(string key, out NbtTag value) => _tags.TryGetValue(key, out value!);
-    public NbtTag this[string key] { get => _tags[key]; set { value.Name = key; _tags[key] = value; } }
+    public bool TryGetValue(string key, out Tag value) => _tags.TryGetValue(key, out value!);
+    public Tag this[string key] { get => _tags[key]; set { value.Name = key; _tags[key] = value; } }
     public ICollection<string> Keys => _tags.Keys;
-    public ICollection<NbtTag> Values => _tags.Values;
-    public void Add(KeyValuePair<string, NbtTag> item) { item.Value.Name = item.Key; _tags.Add(item.Key, item.Value); }
+    public ICollection<Tag> Values => _tags.Values;
+    public void Add(KeyValuePair<string, Tag> item) { item.Value.Name = item.Key; _tags.Add(item.Key, item.Value); }
     public void Clear() => _tags.Clear();
-    public bool Contains(KeyValuePair<string, NbtTag> item) => _tags.Contains(item);
-    public void CopyTo(KeyValuePair<string, NbtTag>[] array, int arrayIndex) => ((ICollection<KeyValuePair<string, NbtTag>>)_tags).CopyTo(array, arrayIndex);
-    public bool Remove(KeyValuePair<string, NbtTag> item) => _tags.Remove(item.Key);
+    public bool Contains(KeyValuePair<string, Tag> item) => _tags.Contains(item);
+    public void CopyTo(KeyValuePair<string, Tag>[] array, int arrayIndex) => ((ICollection<KeyValuePair<string, Tag>>)_tags).CopyTo(array, arrayIndex);
+    public bool Remove(KeyValuePair<string, Tag> item) => _tags.Remove(item.Key);
     public int Count => _tags.Count;
     public bool IsReadOnly => false;
-    public IEnumerator<KeyValuePair<string, NbtTag>> GetEnumerator() => _tags.GetEnumerator();
+    public IEnumerator<KeyValuePair<string, Tag>> GetEnumerator() => _tags.GetEnumerator();
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => _tags.GetEnumerator();
 }

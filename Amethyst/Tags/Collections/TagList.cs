@@ -1,18 +1,18 @@
 using Amethyst.Types;
 
-namespace Amethyst.Tags;
+namespace Amethyst.Tags.Collections;
 
-public class NbtList : NbtTag, IList<NbtTag>
+public class TagList : Tag, IList<Tag>
 {
-    private readonly List<NbtTag> _tags = [];
+    private readonly List<Tag> _tags = [];
     
-    public override NbtTagType Type => NbtTagType.List;
+    public override TagType Type => TagType.List;
     
     /// <summary>
     /// The type of tags contained in this list. 
-    /// If the list is empty, this can be NbtTagType.End.
+    /// If the list is empty, this can be TagType.End.
     /// </summary>
-    public NbtTagType ListType { get; private set; } = NbtTagType.End;
+    public TagType ListType { get; private set; } = TagType.End;
 
     public override void WritePayload(Stream stream)
     {
@@ -22,13 +22,8 @@ public class NbtList : NbtTag, IList<NbtTag>
             ListType = _tags[0].Type;
             if (_tags.Any(t => t.Type != ListType))
             {
-                throw new InvalidDataException("All tags in an NBT List must be of the same type.");
+                throw new InvalidDataException("All tags in a TAG_List must be of the same type.");
             }
-        }
-        else
-        {
-            // Empty list usually writes TAG_End (0) as type, but can be anything.
-            // We keep existing ListType if set, or default to End.
         }
 
         stream.WriteByte((byte)ListType);
@@ -46,7 +41,7 @@ public class NbtList : NbtTag, IList<NbtTag>
         var typeId = stream.ReadByte();
         if (typeId == -1) throw new EndOfStreamException();
         
-        ListType = (NbtTagType)typeId;
+        ListType = (TagType)typeId;
         var count = TInt.Read(stream).Value;
 
         _tags.Clear();
@@ -62,17 +57,17 @@ public class NbtList : NbtTag, IList<NbtTag>
     }
 
     // IList Implementation
-    public IEnumerator<NbtTag> GetEnumerator() => _tags.GetEnumerator();
+    public IEnumerator<Tag> GetEnumerator() => _tags.GetEnumerator();
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => _tags.GetEnumerator();
-    public void Add(NbtTag item) => _tags.Add(item);
+    public void Add(Tag item) => _tags.Add(item);
     public void Clear() => _tags.Clear();
-    public bool Contains(NbtTag item) => _tags.Contains(item);
-    public void CopyTo(NbtTag[] array, int arrayIndex) => _tags.CopyTo(array, arrayIndex);
-    public bool Remove(NbtTag item) => _tags.Remove(item);
+    public bool Contains(Tag item) => _tags.Contains(item);
+    public void CopyTo(Tag[] array, int arrayIndex) => _tags.CopyTo(array, arrayIndex);
+    public bool Remove(Tag item) => _tags.Remove(item);
     public int Count => _tags.Count;
     public bool IsReadOnly => false;
-    public int IndexOf(NbtTag item) => _tags.IndexOf(item);
-    public void Insert(int index, NbtTag item) => _tags.Insert(index, item);
+    public int IndexOf(Tag item) => _tags.IndexOf(item);
+    public void Insert(int index, Tag item) => _tags.Insert(index, item);
     public void RemoveAt(int index) => _tags.RemoveAt(index);
-    public NbtTag this[int index] { get => _tags[index]; set => _tags[index] = value; }
+    public Tag this[int index] { get => _tags[index]; set => _tags[index] = value; }
 }
