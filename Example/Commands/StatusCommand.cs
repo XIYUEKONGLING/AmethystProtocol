@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using Example.Network;
 using Example.Settings;
@@ -35,7 +36,8 @@ public class StatusCommand : AsyncCommand<ServerSettings>
         }
         catch (Exception ex)
         {
-            AnsiConsole.MarkupLine($"[red]Error:[/ {ex.Message}]");
+            // Fix: Escape the exception message to prevent markup parsing errors
+            AnsiConsole.MarkupLine($"[red]Error:[/ {Markup.Escape(ex.Message)}");
             return 1;
         }
     }
@@ -51,8 +53,11 @@ public class StatusCommand : AsyncCommand<ServerSettings>
         table.AddRow("Version", $"[blue]{status.Version?.Name ?? "Unknown"}[/] (Protocol: {status.Version?.Protocol})");
 
         // Description (MOTD)
-        var description = ParseDescription(status.Description);
+        var description = ExtractText(status.Description);
         if (string.IsNullOrWhiteSpace(description)) description = "No description provided.";
+        
+        // Remove legacy formatting codes (e.g. §a, §1) for clean display
+        description = System.Text.RegularExpressions.Regex.Replace(description, "§[0-9a-fk-or]", "");
         table.AddRow("Description", $"[italic]{Markup.Escape(description)}[/]");
 
         // Players
@@ -77,24 +82,47 @@ public class StatusCommand : AsyncCommand<ServerSettings>
         AnsiConsole.Write(table);
     }
 
-    private static string ParseDescription(JsonElement element)
+    /// <summary>
+    /// Recursively extracts text from a complex JSON chat component.
+    /// </summary>
+    private static string ExtractText(JsonElement element)
     {
         if (element.ValueKind == JsonValueKind.String)
         {
             return element.GetString() ?? string.Empty;
         }
 
+        if (element.ValueKind == JsonValueKind.Array)
+        {
+            var sb = new StringBuilder();
+            foreach (var item in element.EnumerateArray())
+            {
+                sb.Append(ExtractText(item));
+            }
+            return sb.ToString();
+        }
+
         if (element.ValueKind == JsonValueKind.Object)
         {
-            // Try to get simple "text" property
+            var sb = new StringBuilder();
+
+            // 1. "text" property
             if (element.TryGetProperty("text", out var textProp))
             {
-                return textProp.GetString() ?? string.Empty;
+                sb.Append(textProp.ValueKind == JsonValueKind.String ? textProp.GetString() : ExtractText(textProp));
             }
-            
-            // If it's a complex component (e.g. translate, extra), 
-            // we fallback to the raw JSON string for debugging purposes.
-            return element.GetRawText();
+
+            // 2. "extra" property (list of siblings)
+            if (element.TryGetProperty("extra", out var extraProp) && extraProp.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var item in extraProp.EnumerateArray())
+                {
+                    sb.Append(ExtractText(item));
+                }
+            }
+
+            // Note: "translate" components are ignored here as we don't have a translation key map.
+            return sb.ToString();
         }
 
         return string.Empty;
