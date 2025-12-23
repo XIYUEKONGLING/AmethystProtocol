@@ -2,7 +2,7 @@ using Amethyst.Interfaces;
 
 namespace Amethyst.Types;
 
-public readonly struct VarLong(long value) : IType<VarLong>
+public readonly struct TVarLong(long value) : IType<TVarLong>
 {
     private const int SegmentBits = 0x7F;
     private const int ContinueBit = 0x80;
@@ -26,7 +26,7 @@ public readonly struct VarLong(long value) : IType<VarLong>
         }
     }
 
-    public static VarLong Read(Stream stream)
+    public static TVarLong Read(Stream stream)
     {
         long value = 0;
         var position = 0;
@@ -53,9 +53,9 @@ public readonly struct VarLong(long value) : IType<VarLong>
             }
         }
 
-        return new VarLong(value);
+        return new TVarLong(value);
     }
 
-    public static implicit operator long(VarLong l) => l.Value;
-    public static implicit operator VarLong(long l) => new(l);
+    public static implicit operator long(TVarLong l) => l.Value;
+    public static implicit operator TVarLong(long l) => new(l);
 }

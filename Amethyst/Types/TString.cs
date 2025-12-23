@@ -3,7 +3,7 @@ using Amethyst.Interfaces;
 
 namespace Amethyst.Types;
 
-public readonly struct String(string value) : IType<String>
+public readonly struct TString(string value) : IType<TString>
 {
     private const int MaxLength = 32767;
 
@@ -17,13 +17,13 @@ public readonly struct String(string value) : IType<String>
         }
 
         var bytes = Encoding.UTF8.GetBytes(Value);
-        new VarInt(bytes.Length).Write(stream);
+        new TVarInt(bytes.Length).Write(stream);
         stream.Write(bytes);
     }
 
-    public static String Read(Stream stream)
+    public static TString Read(Stream stream)
     {
-        var length = VarInt.Read(stream).Value;
+        var length = TVarInt.Read(stream).Value;
 
         // Max bytes calculation based on documentation: (32767 * 3) + 3
         // However, we check the VarInt value (length of bytes) first.
@@ -45,9 +45,9 @@ public readonly struct String(string value) : IType<String>
             throw new InvalidDataException($"String length {result.Length} exceeds maximum allowed length of {MaxLength}.");
         }
 
-        return new String(result);
+        return new TString(result);
     }
 
-    public static implicit operator string(String s) => s.Value;
-    public static implicit operator String(string s) => new(s);
+    public static implicit operator string(TString s) => s.Value;
+    public static implicit operator TString(string s) => new(s);
 }

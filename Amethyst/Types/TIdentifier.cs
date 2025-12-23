@@ -3,12 +3,12 @@ using Amethyst.Interfaces;
 
 namespace Amethyst.Types;
 
-public readonly partial struct Identifier : IType<Identifier>
+public readonly partial struct TIdentifier : IType<TIdentifier>
 {
     public string Namespace { get; }
     public string Value { get; }
 
-    public Identifier(string fullIdentifier)
+    public TIdentifier(string fullIdentifier)
     {
         var parts = fullIdentifier.Split(':');
         
@@ -30,7 +30,7 @@ public readonly partial struct Identifier : IType<Identifier>
         Validate();
     }
 
-    public Identifier(string @namespace, string value)
+    public TIdentifier(string @namespace, string value)
     {
         Namespace = @namespace;
         Value = value;
@@ -41,13 +41,13 @@ public readonly partial struct Identifier : IType<Identifier>
 
     public void Write(Stream stream)
     {
-        new String(ToString()).Write(stream);
+        new TString(ToString()).Write(stream);
     }
 
-    public static Identifier Read(Stream stream)
+    public static TIdentifier Read(Stream stream)
     {
-        var content = String.Read(stream);
-        return new Identifier(content.Value);
+        var content = TString.Read(stream);
+        return new TIdentifier(content.Value);
     }
 
     private void Validate()
@@ -69,6 +69,6 @@ public readonly partial struct Identifier : IType<Identifier>
     [GeneratedRegex("^[a-z0-9.-_/]+$")]
     private static partial Regex ValueRegex();
 
-    public static implicit operator string(Identifier i) => i.ToString();
-    public static implicit operator Identifier(string s) => new(s);
+    public static implicit operator string(TIdentifier i) => i.ToString();
+    public static implicit operator TIdentifier(string s) => new(s);
 }

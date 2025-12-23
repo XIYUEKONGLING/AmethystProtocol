@@ -3,7 +3,7 @@ using Amethyst.Interfaces;
 
 namespace Amethyst.Types;
 
-public readonly struct Long(long value) : IType<Long>
+public readonly struct TLong(long value) : IType<TLong>
 {
     public long Value { get; } = value;
 
@@ -14,13 +14,13 @@ public readonly struct Long(long value) : IType<Long>
         stream.Write(buffer);
     }
 
-    public static Long Read(Stream stream)
+    public static TLong Read(Stream stream)
     {
         Span<byte> buffer = stackalloc byte[8];
         stream.ReadExactly(buffer);
-        return new Long(BinaryPrimitives.ReadInt64BigEndian(buffer));
+        return new TLong(BinaryPrimitives.ReadInt64BigEndian(buffer));
     }
 
-    public static implicit operator long(Long l) => l.Value;
-    public static implicit operator Long(long l) => new(l);
+    public static implicit operator long(TLong l) => l.Value;
+    public static implicit operator TLong(long l) => new(l);
 }

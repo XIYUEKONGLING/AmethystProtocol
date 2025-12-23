@@ -3,7 +3,7 @@ using Amethyst.Interfaces;
 
 namespace Amethyst.Types;
 
-public readonly struct Double(double value) : IType<Double>
+public readonly struct TDouble(double value) : IType<TDouble>
 {
     public double Value { get; } = value;
 
@@ -14,13 +14,13 @@ public readonly struct Double(double value) : IType<Double>
         stream.Write(buffer);
     }
 
-    public static Double Read(Stream stream)
+    public static TDouble Read(Stream stream)
     {
         Span<byte> buffer = stackalloc byte[8];
         stream.ReadExactly(buffer);
-        return new Double(BinaryPrimitives.ReadDoubleBigEndian(buffer));
+        return new TDouble(BinaryPrimitives.ReadDoubleBigEndian(buffer));
     }
 
-    public static implicit operator double(Double d) => d.Value;
-    public static implicit operator Double(double d) => new(d);
+    public static implicit operator double(TDouble d) => d.Value;
+    public static implicit operator TDouble(double d) => new(d);
 }

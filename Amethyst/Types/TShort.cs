@@ -3,7 +3,7 @@ using Amethyst.Interfaces;
 
 namespace Amethyst.Types;
 
-public readonly struct Short(short value) : IType<Short>
+public readonly struct TShort(short value) : IType<TShort>
 {
     public short Value { get; } = value;
 
@@ -14,13 +14,13 @@ public readonly struct Short(short value) : IType<Short>
         stream.Write(buffer);
     }
 
-    public static Short Read(Stream stream)
+    public static TShort Read(Stream stream)
     {
         Span<byte> buffer = stackalloc byte[2];
         stream.ReadExactly(buffer);
-        return new Short(BinaryPrimitives.ReadInt16BigEndian(buffer));
+        return new TShort(BinaryPrimitives.ReadInt16BigEndian(buffer));
     }
 
-    public static implicit operator short(Short s) => s.Value;
-    public static implicit operator Short(short s) => new(s);
+    public static implicit operator short(TShort s) => s.Value;
+    public static implicit operator TShort(short s) => new(s);
 }

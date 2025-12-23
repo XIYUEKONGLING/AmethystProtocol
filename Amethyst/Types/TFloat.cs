@@ -3,7 +3,7 @@ using Amethyst.Interfaces;
 
 namespace Amethyst.Types;
 
-public readonly struct Float(float value) : IType<Float>
+public readonly struct TFloat(float value) : IType<TFloat>
 {
     public float Value { get; } = value;
 
@@ -14,13 +14,13 @@ public readonly struct Float(float value) : IType<Float>
         stream.Write(buffer);
     }
 
-    public static Float Read(Stream stream)
+    public static TFloat Read(Stream stream)
     {
         Span<byte> buffer = stackalloc byte[4];
         stream.ReadExactly(buffer);
-        return new Float(BinaryPrimitives.ReadSingleBigEndian(buffer));
+        return new TFloat(BinaryPrimitives.ReadSingleBigEndian(buffer));
     }
 
-    public static implicit operator float(Float f) => f.Value;
-    public static implicit operator Float(float f) => new(f);
+    public static implicit operator float(TFloat f) => f.Value;
+    public static implicit operator TFloat(float f) => new(f);
 }
