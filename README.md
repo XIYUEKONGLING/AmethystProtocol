@@ -10,6 +10,22 @@ A minecraft network protocol and NBT utility library.
 
 ### NBT Parsing
 
+```text
+- (Unnamed) [Compound]: { ... 1 Entries }
+  - Data [Compound]: { ... 30 Entries }
+    - thunderTime [Int]: 33998
+    - Difficulty [Byte]: 2
+    - allowCommands [Byte]: 1
+    - initialized [Byte]: 1
+    - hardcore [Byte]: 0
+    - version [Int]: 19133
+    - ServerBrands [List]: [List<String>, 1 Entries]
+    - GameType [Int]: 1
+    - LevelName [String]: "Test World"
+    - Time [Long]: 4217L
+// ......
+```
+
 ```csharp
 public static class Program
 {
@@ -59,20 +75,4 @@ public static class Program
         }
     }
 }
-```
-
-```text
-- (Unnamed) [Compound]: { ... 1 Entries }
-  - Data [Compound]: { ... 30 Entries }
-    - thunderTime [Int]: 33998
-    - Difficulty [Byte]: 2
-    - allowCommands [Byte]: 1
-    - initialized [Byte]: 1
-    - hardcore [Byte]: 0
-    - version [Int]: 19133
-    - ServerBrands [List]: [List<String>, 1 Entries]
-    - GameType [Int]: 1
-    - LevelName [String]: "Test World"
-    - Time [Long]: 4217L
-// ......
 ```
